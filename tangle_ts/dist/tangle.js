@@ -637,6 +637,9 @@ var TimeMachine = class {
   read_memory(address, length) {
     return new Uint8Array(new Uint8Array(this._wasm_instance.instance.exports.memory.buffer, address, length));
   }
+  read_memory_clamped(address, length) {
+    return new Uint8ClampedArray(new Uint8ClampedArray(this._wasm_instance.instance.exports.memory.buffer, address, length));
+  }
   read_string(address, length) {
     const message_data = this.read_memory(address, length);
     const decoded_string = decoder2.decode(new Uint8Array(message_data));
@@ -977,9 +980,6 @@ var Tangle = class {
           if (typeof importValue === "function") {
             moduleImports[importName] = function(...args) {
               const r = importValue(...args);
-              if (this._in_call_that_will_be_reverted) {
-                return r;
-              }
               if (r !== void 0) {
                 console.log("[tangle warning] Tangle prevents WebAssembly imports from returning values because those values are unique per-peer and would cause a desync.");
               }
@@ -1386,6 +1386,9 @@ var Tangle = class {
   }
   read_memory(address, length) {
     return this._time_machine.read_memory(address, length);
+  }
+  read_memory_clamped(address, length) {
+    return this._time_machine.read_memory_clamped(address, length);
   }
   read_string(address, length) {
     return this._time_machine.read_string(address, length);

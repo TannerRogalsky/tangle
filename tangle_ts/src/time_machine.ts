@@ -157,6 +157,10 @@ export class TimeMachine {
         return new Uint8Array(new Uint8Array((this._wasm_instance.instance.exports.memory as WebAssembly.Memory).buffer, address, length));
     }
 
+    read_memory_clamped(address: number, length: number): Uint8ClampedArray {
+        return new Uint8ClampedArray(new Uint8ClampedArray((this._wasm_instance.instance.exports.memory as WebAssembly.Memory).buffer, address, length));
+    }
+
     read_string(address: number, length: number): string {
         const message_data = this.read_memory(address, length);
         const decoded_string = decoder.decode(new Uint8Array(message_data));

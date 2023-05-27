@@ -92,9 +92,9 @@ export class Tangle {
                         moduleImports[importName] = function (...args: any) {
                             const r = importValue(...args);
                             // This call will be reverted so it's OK if it causes a temporary desync.
-                            if (this._in_call_that_will_be_reverted) {
-                                return r;
-                            }
+                            // if (this._in_call_that_will_be_reverted) {
+                            //     return r;
+                            // }
                             if (r !== undefined) {
                                 console.log("[tangle warning] Tangle prevents WebAssembly imports from returning values because those values are unique per-peer and would cause a desync.")
                             }
@@ -643,6 +643,9 @@ export class Tangle {
 
     read_memory(address: number, length: number): Uint8Array {
         return this._time_machine.read_memory(address, length);
+    }
+    read_memory_clamped(address: number, length: number): Uint8ClampedArray {
+        return this._time_machine.read_memory_clamped(address, length);
     }
     read_string(address: number, length: number): string {
         return this._time_machine.read_string(address, length);
